@@ -24,11 +24,11 @@
         float _Amplitude;
         float _RefractiveIndex;
         float _TransitionPhase;
-        fixed4 _Color;
+        float _Color;
 
         struct Input {
             float2 uv_MainTex;
-            INTERNAL_DATA
+            INTERNAL_DATA;
         };
 
         void setColorToWavelength() {
@@ -38,32 +38,32 @@
 			float scaledWavelength = (((_Wavelength - .485) * 13.79) + 0.380) * 1000;
         	if ((scaledWavelength >= 380) && (scaledWavelength<440)){
 		        red = -(scaledWavelength - 440) / (440 - 380);
-            	green = 0.0;
-            	blue = 1.0;
+            	        green = 0.0;
+            	        blue = 1.0;
         	} else if((scaledWavelength >= 440) && (scaledWavelength<490)){
-            	red = 0.0;
-            	green = (scaledWavelength - 440) / (490 - 440);
-            	blue = 1.0;
+            	        red = 0.0;
+            	        green = (scaledWavelength - 440) / (490 - 440);
+            	        blue = 1.0;
         	} else if((scaledWavelength >= 490) && (scaledWavelength<510)){
-            	red = 0.0;
-            	green = 1.0;
-            	blue = -(scaledWavelength - 510) / (510 - 490);
+            	        red = 0.0;
+            	        green = 1.0;
+            	        blue = -(scaledWavelength - 510) / (510 - 490);
         	} else if((scaledWavelength >= 510) && (scaledWavelength<580)){
-				red = (scaledWavelength - 510) / (580 - 510);
-            	green = 1.0;
-            	blue = 0.0;
+            	        red = (scaledWavelength - 510) / (580 - 510);
+            	        green = 1.0;
+            	        blue = 0.0;
         	} else if((scaledWavelength >= 580) && (scaledWavelength<645)){
-            	red = 1.0;
-            	green = -(scaledWavelength - 645) / (645 - 580);
-            	blue = 0.0;
+            	        red = 1.0;
+            	        green = -(scaledWavelength - 645) / (645 - 580);
+            	        blue = 0.0;
         	} else if((scaledWavelength >= 645) && (scaledWavelength<781)){
-            	red = 1.0;
-            	green = 0.0;
-            	blue = 0.0;
+            	        red = 1.0;
+            	        green = 0.0;
+            	        blue = 0.0;
         	} else {
-            	red = 0.0;
-            	green = 0.0;
-            	blue = 0.0;
+            	        red = 0.0;
+            	        green = 0.0;
+            	        blue = 0.0;
         	}
 
         	if ((scaledWavelength >= 380) && (scaledWavelength<420)){
