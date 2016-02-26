@@ -6,7 +6,7 @@ public class WaveSegmentController : MonoBehaviour {
 
     public float wavelength, velocity, refractiveIndex, deltaV;
 
-    private float prevRefractiveIndex, holdTime;
+    private float prevRefractiveIndex, holdTime, groupPhase;
 
     private Rigidbody rb;
     private Renderer rend;
@@ -14,8 +14,10 @@ public class WaveSegmentController : MonoBehaviour {
     void Start () {
         rb = GetComponent<Rigidbody>();
         rend = GetComponent<Renderer> ();
+		groupPhase = transform.position.x;
         rend.material.SetFloat ("_Velocity", velocity);
         rend.material.SetFloat ("_TransitionPhase", 0.0f);
+		rend.material.SetFloat ("_GroupPhase", groupPhase);
     }
 
     void Update() {
@@ -23,11 +25,15 @@ public class WaveSegmentController : MonoBehaviour {
 			(transform.position.x > 1500 && transform.position.x < 1700) ||
 			(transform.position.x > 3100 && transform.position.x < 3300)) {
             if (refractiveIndex != 0.5f) {
+				groupPhase *= 0.5f;
+				rend.material.SetFloat ("_GroupPhase", groupPhase);
                 refractiveIndex = 0.5f;
                 rend.material.SetFloat("_RefractiveIndex", 0.5f);
             }
         } else {
             if (refractiveIndex != 1.0f) {
+				groupPhase *= 2.0f;
+				rend.material.SetFloat ("_GroupPhase", groupPhase);
                 refractiveIndex = 1.0f;
                 rend.material.SetFloat("_RefractiveIndex", 1.0f);
             }
@@ -44,23 +50,29 @@ public class WaveSegmentController : MonoBehaviour {
 		
             if (predictedX > 200.0f && predictedX < 400.0f && refractiveIndex != 0.5f) {
                 predictedX += (200.0f - transform.position.x) +
-                    (Time.deltaTime - (200.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 0.5f;
+                    (Time.deltaTime - (200.0f - transform.position.x) / (velocity * refractiveIndex))
+					* velocity * 0.5f;
             } else if (predictedX > 1500.0f && predictedX < 1700.0f && refractiveIndex != 0.5f) {
                 predictedX += (1500.0f - transform.position.x) +
-                    (Time.deltaTime - (1500.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 0.5f;
+                    (Time.deltaTime - (1500.0f - transform.position.x) / (velocity * refractiveIndex))
+					* velocity * 0.5f;
 			} else if (predictedX > 3100.0f && predictedX < 3300.0f && refractiveIndex != 0.5f) {
                 predictedX += (3100.0f - transform.position.x) +
-                    (Time.deltaTime - (3100.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 0.5f;
+                    (Time.deltaTime - (3100.0f - transform.position.x) / (velocity * refractiveIndex))
+					* velocity * 0.5f;
 			} else if (refractiveIndex != 1.0f) {
 				if (predictedX > 400.0f && predictedX < 1500.0f) {
 					predictedX += (400.0f - transform.position.x) +
-					(Time.deltaTime - (400.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 1.0f;
+					(Time.deltaTime - (400.0f - transform.position.x) / (velocity * refractiveIndex))
+						* velocity * 1.0f;
 				} else if (predictedX > 1700.0f && predictedX < 3100.0f) {
 					predictedX += (1700.0f - transform.position.x) +
-					(Time.deltaTime - (1700.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 1.0f;
+					(Time.deltaTime - (1700.0f - transform.position.x) / (velocity * refractiveIndex))
+						* velocity * 1.0f;
 				} else if (predictedX > 3300.0f) {
 					predictedX += (3300.0f - transform.position.x) +
-					(Time.deltaTime - (3300.0f - transform.position.x) / (velocity * refractiveIndex)) * velocity * 1.0f;
+					(Time.deltaTime - (3300.0f - transform.position.x) / (velocity * refractiveIndex))
+						* velocity * 1.0f;
 				}
 			}
 		}
@@ -87,5 +99,6 @@ public class WaveSegmentController : MonoBehaviour {
 		
         Vector3 newPos = new Vector3 (predictedX, transform.position.y, transform.position.z);
         rb.MovePosition (newPos);
+		rend.material.SetFloat ("_Displacement", predictedX);
     }
 }

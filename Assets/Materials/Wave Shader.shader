@@ -6,6 +6,8 @@
         _Amplitude ("Amplitude", Float) = 2.0
         _RefractiveIndex ("Refractive Index", Float) = 1.0
         _TransitionPhase ("Transition Phase", Float) = 0.0
+        _Displacement ("Displacement", Float) = 0.0
+        _GroupPhase ("Group Phase", Float) = 0.0
     }
     SubShader {
         Tags { "RenderType"="Opaque" "IgnoreProjector"="True" }
@@ -24,6 +26,8 @@
         float _Amplitude;
         float _RefractiveIndex;
         float _TransitionPhase;
+        float _Displacement;
+        float _GroupPhase;
         fixed4 _Color;
        
         struct Input {  
@@ -90,9 +94,9 @@
         }
 
         void vert (inout appdata_full v) {
-             float phase = (float) _Time * _Velocity * _RefractiveIndex;
+             float phase = (float) _Time * _Velocity * _RefractiveIndex * 0.1;
              float4 wpos = mul( _Object2World, v.vertex);
-             float offset = wpos.x;
+             float offset = _GroupPhase + (wpos.x - _Displacement);
              wpos.z += sin((2.0 * 3.14159 / _Wavelength) * (phase + offset) + _TransitionPhase) * _Amplitude;
              v.vertex = mul(_World2Object, wpos);
         }
