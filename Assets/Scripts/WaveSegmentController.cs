@@ -40,9 +40,7 @@ public class WaveSegmentController : MonoBehaviour {
         }
 
         rend.material.SetFloat ("_RefractiveIndex", refractiveIndex);
-    }
-    
-    void FixedUpdate () {
+
         float predictedX = transform.position.x;
 
         if (velocity != 0) {
